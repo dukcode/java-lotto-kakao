@@ -2,6 +2,7 @@ plugins {
     id 'java'
 }
 
+group 'com.kakao.onboarding.precourse.albusduke'
 version '1.0-SNAPSHOT'
 
 repositories {
