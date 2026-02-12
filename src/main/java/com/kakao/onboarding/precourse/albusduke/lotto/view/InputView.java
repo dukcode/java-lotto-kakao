@@ -15,11 +15,13 @@ public class InputView {
 	private static final int MAX_PURCHASE_AMOUNT = 100_000;
 
 	private static final String PURCHASE_AMOUNT_REQUEST = "구입금액을 입력해 주세요.";
-	private static final String ILLEGAL_PURCHASE_AMOUNT_ERR_MSG =
-		"구매금액은 " + MIN_PURCHASE_AMOUNT + " 초과, " + MAX_PURCHASE_AMOUNT + " 미만이어야 합니다";
 	private static final String WINNING_NUMBERS_REQUEST = "지난 주 당첨 번호를 입력해 주세요.";
 	private static final String BONUS_NUMBER_REQUEST = "보너스 볼을 입력해 주세요.";
-	private static final String ILLEGAL_WINNING_NUMBERS_ERR_MSG = "입력 형식은 숫자여야 합니다. (ex: 1, 2, 3, 4, 5, 6)";
+
+	private static final String ILLEGAL_NUMBERS = "입력 형식은 숫자여야 합니다. (ex: 1, 2, 3, 4, 5, 6)";
+	private static final String ILLEGAL_NUMBER = "입력 형식은 숫자 형식이어야 합니다.";
+	private static final String ILLEGAL_PURCHASE_AMOUNT =
+		"구매금액은 " + MIN_PURCHASE_AMOUNT + " 초과, " + MAX_PURCHASE_AMOUNT + " 미만이어야 합니다";
 
 	private final Input input;
 
@@ -29,30 +31,40 @@ public class InputView {
 
 	public PurchaseAmount inputPurchaseAmount() {
 		System.out.println(PURCHASE_AMOUNT_REQUEST);
-		try {
-			int purchaseAmount = Integer.parseInt(input.readNext());
 
-			if (purchaseAmount <= MIN_PURCHASE_AMOUNT || MAX_PURCHASE_AMOUNT < purchaseAmount) {
-				throw new IllegalArgumentException(ILLEGAL_PURCHASE_AMOUNT_ERR_MSG);
-			}
-			return new PurchaseAmount(purchaseAmount);
-		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("숫자 형식이어야 합니다.");
+		int purchaseAmount = parseInt();
+
+		if (purchaseAmount <= MIN_PURCHASE_AMOUNT || MAX_PURCHASE_AMOUNT < purchaseAmount) {
+			throw new IllegalArgumentException(ILLEGAL_PURCHASE_AMOUNT);
 		}
+
+		return new PurchaseAmount(purchaseAmount);
 	}
 
 	public WinningNumbers inputWinningNumbers() {
 		System.out.println(WINNING_NUMBERS_REQUEST);
 
-		List<Integer> winningNumbers;
-		try {
-			winningNumbers = Arrays.stream(input.readNext().split(", ")).map(Integer::parseInt).toList();
-		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException(ILLEGAL_WINNING_NUMBERS_ERR_MSG);
-		}
+		List<Integer> winningNumbers = parseIntegers();
+
 		System.out.println(BONUS_NUMBER_REQUEST);
-		int bonusNumber = Integer.parseInt(input.readNext());
+		int bonusNumber = parseInt();
 
 		return new WinningNumbers(new LottoNumbers(winningNumbers), LottoNumber.from(bonusNumber));
+	}
+
+	private List<Integer> parseIntegers() {
+		try {
+			return Arrays.stream(input.readNext().split(", ")).map(Integer::parseInt).toList();
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException(ILLEGAL_NUMBERS);
+		}
+	}
+
+	private int parseInt() {
+		try {
+			return Integer.parseInt(input.readNext());
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException(ILLEGAL_NUMBER);
+		}
 	}
 }
