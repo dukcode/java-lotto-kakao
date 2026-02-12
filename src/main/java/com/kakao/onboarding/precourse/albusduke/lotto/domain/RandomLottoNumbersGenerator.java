@@ -7,11 +7,12 @@ import java.util.stream.IntStream;
 
 public class RandomLottoNumbersGenerator implements LottoNumbersGenerator {
 
-    private final List<Integer> numbers = new ArrayList<>(IntStream.rangeClosed(1, 45).boxed().toList());
+	private final List<Integer> numbers = new ArrayList<>(
+		IntStream.rangeClosed(LottoNumber.MIN_NUMBER, LottoNumber.MAX_NUMBER).boxed().toList());
 
-    @Override
-    public LottoNumbers generate() {
-        Collections.shuffle(numbers);
-        return new LottoNumbers(numbers.subList(0, 6));
-    }
+	@Override
+	public LottoNumbers generate() {
+		Collections.shuffle(numbers);
+		return new LottoNumbers(numbers.subList(0, LottoNumbers.NUMBER_SIZE));
+	}
 }

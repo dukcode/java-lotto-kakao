@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public class LottoNumbers {
 
-	private static final int NUMBER_SIZE = 6;
+	static final int NUMBER_SIZE = 6;
 	private static final String NUMBER_SIZE_ERR_MSG = "숫자 6개로 생성할 수 있습니다.";
 	private static final String DUPLICATED_NUMBER_ERR_MSG = "중복된 숫자로 생성할 수 없습니다.";
 
