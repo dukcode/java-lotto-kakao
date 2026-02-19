@@ -65,7 +65,7 @@ public class OutputView {
             .append("\n")
             .append(createPrizeOutput(Prize.FIRST, winningPrizes))
             .append("\n")
-            .append(String.format(RATIO_FORMAT, statistics.ratio()));
+            .append(String.format(RATIO_FORMAT, statistics.payoutRatio()));
 
         output.output(sb.toString());
     }
