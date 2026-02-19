@@ -32,9 +32,9 @@ public class LottoController {
     public PurchaseGameAmount purchase() {
         return Retry.onError(() -> {
             PurchaseAmountRequest purchaseAmountRequest = inputView.inputPurchaseAmount();
+            lottoService.validatePurchaseAmount(purchaseAmountRequest);
 
             ManualGameCountRequest manualGameCountRequest = inputView.inputManualGameCount();
-
             return lottoService.purchaseLottoGames(purchaseAmountRequest, manualGameCountRequest);
         }, outputView::outputError);
     }
@@ -42,13 +42,10 @@ public class LottoController {
     public LottoGames generate(PurchaseGameAmount purchaseGameAmount) {
         return Retry.onError(() -> {
             LottoGamesRequest manualGamesRequest = inputView.inputManualGames(purchaseGameAmount);
-
             LottoGames manualGames = lottoService.purchaseManualGames(manualGamesRequest);
-
             outputView.outputPurchaseGameAmount(purchaseGameAmount);
 
             LottoGames autoGames = lottoService.purchaseAutoGames(purchaseGameAmount);
-
             outputView.outputLottoNumbers(autoGames);
 
             return lottoService.sumGames(manualGames, autoGames);

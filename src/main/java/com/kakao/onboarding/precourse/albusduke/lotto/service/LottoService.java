@@ -50,4 +50,8 @@ public class LottoService {
     public WinningNumbers createWinningNumbers(WinningNumbersRequest winningNumbersRequest) {
         return winningNumbersRequest.toWinningNumbers();
     }
+
+    public PurchaseAmount validatePurchaseAmount(PurchaseAmountRequest purchaseAmountRequest) {
+        return purchaseAmountRequest.toPurchaseAmount();
+    }
 }
