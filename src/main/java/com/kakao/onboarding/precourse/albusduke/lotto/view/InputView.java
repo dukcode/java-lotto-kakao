@@ -4,6 +4,7 @@ import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoGames;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumber;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseAmount;
+import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseGameAmount;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.WinningNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.util.Input;
 import com.kakao.onboarding.precourse.albusduke.lotto.util.Output;
@@ -47,11 +48,11 @@ public class InputView {
         return new ManualGameCount(manualGameCount);
     }
 
-    public LottoGames inputManualGames(ManualGameCount manualGameCount) {
+    public LottoGames inputManualGames(PurchaseGameAmount purchaseGameAmount) {
         output.output(MANUAL_GAME_NUMBERS_REQUEST);
 
         List<LottoNumbers> manualGames = new ArrayList<>();
-        for (int i = 0; i < manualGameCount.count(); ++i) {
+        for (int i = 0; i < purchaseGameAmount.manualCount(); ++i) {
             manualGames.add(new LottoNumbers(parseIntegers()));
         }
 

@@ -39,8 +39,7 @@ public class LottoController {
 
     public LottoGames generate(PurchaseGameAmount purchaseGameAmount) {
         return Retry.onError(() -> {
-            LottoGames manualGames =
-                inputView.inputManualGames(new ManualGameCount(purchaseGameAmount.manualCount()));
+            LottoGames manualGames = inputView.inputManualGames(purchaseGameAmount);
 
             outputView.outputPurchaseGameAmount(purchaseGameAmount);
 
