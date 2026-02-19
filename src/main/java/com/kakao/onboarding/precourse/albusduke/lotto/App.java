@@ -13,7 +13,7 @@ public class App {
 
 	private static void runLottoGame(LottoController lottoController) {
 		PurchaseGameAmount purchaseGameAmount = lottoController.purchase();
-		LottoGames lottoGames = lottoController.generateNumbers(purchaseGameAmount);
+		LottoGames lottoGames = lottoController.generate(purchaseGameAmount);
 		WinningNumbers winningNumbers = lottoController.createWinningNumbers();
 		lottoController.calculateStatistics(winningNumbers, lottoGames);
 	}

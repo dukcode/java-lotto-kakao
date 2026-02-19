@@ -1,8 +1,10 @@
 package com.kakao.onboarding.precourse.albusduke.lotto.view;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoGames;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumber;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseAmount;
@@ -51,6 +53,17 @@ public class InputView {
 		int manualGameCount = parseInt();
 
 		return new ManualGameCount(manualGameCount);
+	}
+
+	public LottoGames inputManualGames(ManualGameCount manualGameCount) {
+		output.output("수동으로 구매할 번호를 입력해 주세요.");
+
+		List<LottoNumbers> manualGames = new ArrayList<>();
+		for (int i = 0; i < manualGameCount.count(); ++i) {
+			manualGames.add(new LottoNumbers(parseIntegers()));
+		}
+
+		return new LottoGames(manualGames);
 	}
 
 	public WinningNumbers inputWinningNumbers() {

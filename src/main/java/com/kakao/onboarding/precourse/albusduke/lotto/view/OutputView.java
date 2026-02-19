@@ -16,7 +16,7 @@ import com.kakao.onboarding.precourse.albusduke.lotto.util.Output;
 
 public class OutputView {
 
-	private static final String PURCHASE_COUNT_FORMAT = "%d개를 구매했습니다.";
+	private static final String PURCHASE_COUNT_FORMAT = "수동으로 %d장, 자동으로 %d개를 구매했습니다.";
 	private static final String STATISTICS_PREFIX = "당첨 통계";
 	private static final String SEPARATE_LINE = "-------------";
 	private static final String MATCHING_FORMAT = "%d개 일치";
@@ -32,7 +32,8 @@ public class OutputView {
 	}
 
 	public void outputPurchaseGameAmount(PurchaseGameAmount purchasedGameAmount) {
-		output.output(String.format(PURCHASE_COUNT_FORMAT, purchasedGameAmount.autoCount()));
+		output.output(
+			String.format(PURCHASE_COUNT_FORMAT, purchasedGameAmount.manualCount(), purchasedGameAmount.autoCount()));
 	}
 
 	public void outputLottoNumbers(LottoGames lottoGames) {

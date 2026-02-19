@@ -32,7 +32,6 @@ public class LottoController {
 			PurchaseAmount purchaseAmount = inputView.inputPurchaseAmount();
 			ManualGameCount manualGameCount = inputView.inputManualGameCount();
 			PurchaseGameAmount purchaseGameAmount = lottoService.purchaseLottoGames(purchaseAmount, manualGameCount);
-			outputView.outputPurchaseGameAmount(purchaseGameAmount);
 			return purchaseGameAmount;
 		} catch (IllegalArgumentException e) {
 			outputView.outputError(e);
@@ -40,14 +39,16 @@ public class LottoController {
 		}
 	}
 
-	public LottoGames generateNumbers(PurchaseGameAmount purchaseAmount) {
+	public LottoGames generate(PurchaseGameAmount purchaseGameAmount) {
 		try {
-			LottoGames lottoGames = lottoService.purchaseLottoGame(purchaseAmount);
-			outputView.outputLottoNumbers(lottoGames);
-			return lottoGames;
+			LottoGames manualGames = inputView.inputManualGames(new ManualGameCount(purchaseGameAmount.manualCount()));
+			outputView.outputPurchaseGameAmount(purchaseGameAmount);
+			LottoGames autoGames = lottoService.purchaseLottoGame(purchaseGameAmount);
+			outputView.outputLottoNumbers(autoGames);
+			return manualGames.add(autoGames);
 		} catch (IllegalArgumentException e) {
 			outputView.outputError(e);
-			return generateNumbers(purchaseAmount);
+			return generate(purchaseGameAmount);
 		}
 	}
 

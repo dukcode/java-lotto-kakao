@@ -25,6 +25,10 @@ public class LottoService {
 	}
 
 	public LottoGames purchaseLottoGame(PurchaseGameAmount purchaseGameAmount) {
+		return purchaseAutoGames(purchaseGameAmount);
+	}
+
+	private LottoGames purchaseAutoGames(PurchaseGameAmount purchaseGameAmount) {
 		List<LottoNumbers> lottoNumbers = new ArrayList<>();
 		for (int i = 0; i < purchaseGameAmount.autoCount(); ++i) {
 			lottoNumbers.add(lottoNumbersGenerator.generate());
