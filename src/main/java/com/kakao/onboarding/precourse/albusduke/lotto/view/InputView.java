@@ -62,7 +62,7 @@ public class InputView {
 
         List<Integer> winningNumbers = parseIntegers();
 
-        System.out.println(BONUS_NUMBER_REQUEST);
+        output.output(BONUS_NUMBER_REQUEST);
         int bonusNumber = parseInt();
 
         return new WinningNumbers(new LottoNumbers(winningNumbers), LottoNumber.from(bonusNumber));
