@@ -9,15 +9,12 @@ public record PurchaseGameAmount(int autoCount, int manualCount) {
 
     public static PurchaseGameAmount of(PurchaseAmount purchaseAmount, int lottoCost,
         ManualGameCount manualGameCount) {
-        validateDivisibleByLottoCost(purchaseAmount, lottoCost);
-
         int totalCount = purchaseAmount.purchaseAmount() / lottoCost;
         int autoCount = totalCount - manualGameCount.count();
         int manualCount = manualGameCount.count();
 
-        if (totalCount < manualCount) {
-            throw new IllegalArgumentException(MANUAL_COUNT_EXCEEDS_TOTAL_COUNT);
-        }
+        validateDivisibleByLottoCost(purchaseAmount, lottoCost);
+        validateManualCountDoesNotExceedTotal(totalCount, manualCount);
 
         return new PurchaseGameAmount(autoCount, manualCount);
     }
@@ -26,6 +23,12 @@ public record PurchaseGameAmount(int autoCount, int manualCount) {
         if (purchaseAmount.purchaseAmount() % lottoCost != 0) {
             throw new IllegalArgumentException(
                 String.format(PURCHASE_MOUNT_NOT_DIVIDED_BY_LOTTO_COST_FORMAT, lottoCost));
+        }
+    }
+
+    private static void validateManualCountDoesNotExceedTotal(int totalCount, int manualCount) {
+        if (totalCount < manualCount) {
+            throw new IllegalArgumentException(MANUAL_COUNT_EXCEEDS_TOTAL_COUNT);
         }
     }
 }
