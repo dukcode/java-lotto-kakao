@@ -44,7 +44,7 @@ public class LottoController {
 
             outputView.outputPurchaseGameAmount(purchaseGameAmount);
 
-            LottoGames autoGames = lottoService.purchaseLottoGame(purchaseGameAmount);
+            LottoGames autoGames = lottoService.purchaseAutoGames(purchaseGameAmount);
 
             outputView.outputLottoNumbers(autoGames);
 
