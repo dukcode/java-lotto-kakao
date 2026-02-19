@@ -34,14 +34,18 @@ public class InputView {
         this.output = output;
     }
 
+    private static void validateInRange(int purchaseAmount) {
+        if (purchaseAmount <= MIN_PURCHASE_AMOUNT || MAX_PURCHASE_AMOUNT < purchaseAmount) {
+            throw new IllegalArgumentException(ILLEGAL_PURCHASE_AMOUNT);
+        }
+    }
+
     public PurchaseAmount inputPurchaseAmount() {
         output.output(PURCHASE_AMOUNT_REQUEST);
 
         int purchaseAmount = parseInt();
 
-        if (purchaseAmount <= MIN_PURCHASE_AMOUNT || MAX_PURCHASE_AMOUNT < purchaseAmount) {
-            throw new IllegalArgumentException(ILLEGAL_PURCHASE_AMOUNT);
-        }
+        validateInRange(purchaseAmount);
 
         return new PurchaseAmount(purchaseAmount);
     }
@@ -94,4 +98,5 @@ public class InputView {
             throw new IllegalArgumentException(ILLEGAL_NUMBER);
         }
     }
+
 }
