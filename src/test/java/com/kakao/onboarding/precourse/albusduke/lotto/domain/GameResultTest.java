@@ -1,9 +1,8 @@
 package com.kakao.onboarding.precourse.albusduke.lotto.domain;
 
-import com.kakao.onboarding.precourse.albusduke.lotto.domain.GameResult;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.assertj.core.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class GameResultTest {
 

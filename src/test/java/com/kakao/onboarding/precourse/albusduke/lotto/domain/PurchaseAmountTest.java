@@ -16,9 +16,9 @@ public class PurchaseAmountTest {
 
     @Test
     void 최소_구매_금액을_생성할_수_있다() {
-        PurchaseAmount purchaseAmount = new PurchaseAmount(0);
+        PurchaseAmount purchaseAmount = new PurchaseAmount(1000);
 
-        assertThat(purchaseAmount.purchaseAmount()).isEqualTo(0);
+        assertThat(purchaseAmount.purchaseAmount()).isEqualTo(1000);
     }
 
     @Test
