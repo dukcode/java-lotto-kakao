@@ -16,7 +16,7 @@ public class AppContext {
 		Console console = new Console();
 
 		OutputView outputView = new OutputView(console);
-		InputView inputView = new InputView(console);
+		InputView inputView = new InputView(console, console);
 
 		LottoService lottoService = new LottoService(new RandomLottoNumbersGenerator());
 		StatisticsService statisticsService = new StatisticsService();

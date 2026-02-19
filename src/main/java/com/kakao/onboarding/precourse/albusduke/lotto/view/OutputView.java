@@ -32,7 +32,7 @@ public class OutputView {
 	}
 
 	public void outputPurchaseGameAmount(PurchaseGameAmount purchasedGameAmount) {
-		output.output(String.format(PURCHASE_COUNT_FORMAT, purchasedGameAmount.count()));
+		output.output(String.format(PURCHASE_COUNT_FORMAT, purchasedGameAmount.autoCount()));
 	}
 
 	public void outputLottoNumbers(LottoGames lottoGames) {

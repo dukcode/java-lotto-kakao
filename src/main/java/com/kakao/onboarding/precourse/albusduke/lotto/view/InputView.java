@@ -8,6 +8,7 @@ import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseAmount;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.WinningNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.util.Input;
+import com.kakao.onboarding.precourse.albusduke.lotto.util.Output;
 
 public class InputView {
 
@@ -15,6 +16,7 @@ public class InputView {
 	private static final int MAX_PURCHASE_AMOUNT = 100_000;
 
 	private static final String PURCHASE_AMOUNT_REQUEST = "구입금액을 입력해 주세요.";
+	private static final String MANUAL_GAME_COUNT_REQUEST = "수동으로 구매할 로또 수를 입력해 주세요.";
 	private static final String WINNING_NUMBERS_REQUEST = "지난 주 당첨 번호를 입력해 주세요.";
 	private static final String BONUS_NUMBER_REQUEST = "보너스 볼을 입력해 주세요.";
 
@@ -24,13 +26,15 @@ public class InputView {
 		"구매금액은 " + MIN_PURCHASE_AMOUNT + " 초과, " + MAX_PURCHASE_AMOUNT + " 미만이어야 합니다";
 
 	private final Input input;
+	private final Output output;
 
-	public InputView(Input input) {
+	public InputView(Input input, Output output) {
 		this.input = input;
+		this.output = output;
 	}
 
 	public PurchaseAmount inputPurchaseAmount() {
-		System.out.println(PURCHASE_AMOUNT_REQUEST);
+		output.output(PURCHASE_AMOUNT_REQUEST);
 
 		int purchaseAmount = parseInt();
 
@@ -41,8 +45,16 @@ public class InputView {
 		return new PurchaseAmount(purchaseAmount);
 	}
 
+	public ManualGameCount inputManualGameCount() {
+		output.output(MANUAL_GAME_COUNT_REQUEST);
+
+		int manualGameCount = parseInt();
+
+		return new ManualGameCount(manualGameCount);
+	}
+
 	public WinningNumbers inputWinningNumbers() {
-		System.out.println(WINNING_NUMBERS_REQUEST);
+		output.output(WINNING_NUMBERS_REQUEST);
 
 		List<Integer> winningNumbers = parseIntegers();
 

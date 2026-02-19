@@ -8,6 +8,7 @@ import com.kakao.onboarding.precourse.albusduke.lotto.domain.WinningNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.service.LottoService;
 import com.kakao.onboarding.precourse.albusduke.lotto.service.StatisticsService;
 import com.kakao.onboarding.precourse.albusduke.lotto.view.InputView;
+import com.kakao.onboarding.precourse.albusduke.lotto.view.ManualGameCount;
 import com.kakao.onboarding.precourse.albusduke.lotto.view.OutputView;
 
 public class LottoController {
@@ -26,26 +27,27 @@ public class LottoController {
 		this.statisticsService = statisticsService;
 	}
 
-	public PurchaseGameAmount calculatePurchaseGameAmount() {
+	public PurchaseGameAmount purchase() {
 		try {
 			PurchaseAmount purchaseAmount = inputView.inputPurchaseAmount();
-			PurchaseGameAmount purchaseGameAmount = lottoService.purchaseLottoGames(purchaseAmount);
+			ManualGameCount manualGameCount = inputView.inputManualGameCount();
+			PurchaseGameAmount purchaseGameAmount = lottoService.purchaseLottoGames(purchaseAmount, manualGameCount);
 			outputView.outputPurchaseGameAmount(purchaseGameAmount);
 			return purchaseGameAmount;
 		} catch (IllegalArgumentException e) {
 			outputView.outputError(e);
-			return calculatePurchaseGameAmount();
+			return purchase();
 		}
 	}
 
-	public LottoGames purchaseLottoGame(PurchaseGameAmount purchaseAmount) {
+	public LottoGames generateNumbers(PurchaseGameAmount purchaseAmount) {
 		try {
 			LottoGames lottoGames = lottoService.purchaseLottoGame(purchaseAmount);
 			outputView.outputLottoNumbers(lottoGames);
 			return lottoGames;
 		} catch (IllegalArgumentException e) {
 			outputView.outputError(e);
-			return purchaseLottoGame(purchaseAmount);
+			return generateNumbers(purchaseAmount);
 		}
 	}
 

@@ -12,8 +12,8 @@ public class App {
 	}
 
 	private static void runLottoGame(LottoController lottoController) {
-		PurchaseGameAmount purchaseGameAmount = lottoController.calculatePurchaseGameAmount();
-		LottoGames lottoGames = lottoController.purchaseLottoGame(purchaseGameAmount);
+		PurchaseGameAmount purchaseGameAmount = lottoController.purchase();
+		LottoGames lottoGames = lottoController.generateNumbers(purchaseGameAmount);
 		WinningNumbers winningNumbers = lottoController.createWinningNumbers();
 		lottoController.calculateStatistics(winningNumbers, lottoGames);
 	}
