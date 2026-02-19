@@ -15,6 +15,7 @@ public class InputView {
 
     private static final String PURCHASE_AMOUNT_REQUEST = "구입금액을 입력해 주세요.";
     private static final String MANUAL_GAME_COUNT_REQUEST = "수동으로 구매할 로또 수를 입력해 주세요.";
+    private static final String MANUAL_GAME_NUMBERS_REQUEST = "수동으로 구매할 번호를 입력해 주세요.";
     private static final String WINNING_NUMBERS_REQUEST = "지난 주 당첨 번호를 입력해 주세요.";
     private static final String BONUS_NUMBER_REQUEST = "보너스 볼을 입력해 주세요.";
 
@@ -47,7 +48,7 @@ public class InputView {
     }
 
     public LottoGames inputManualGames(ManualGameCount manualGameCount) {
-        output.output("수동으로 구매할 번호를 입력해 주세요.");
+        output.output(MANUAL_GAME_NUMBERS_REQUEST);
 
         List<LottoNumbers> manualGames = new ArrayList<>();
         for (int i = 0; i < manualGameCount.count(); ++i) {
