@@ -6,6 +6,8 @@ import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoGames;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumber;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.Prize;
+import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseAmount;
+import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseGameAmount;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.Statistics;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.WinningNumbers;
 import java.util.List;
@@ -31,7 +33,8 @@ public class StatisticsServiceTest {
             new LottoNumbers(List.of(1, 2, 3, 4, 5, 6))
         ));
 
-        Statistics statistics = statisticsService.calculateStatistics(winningNumbers, lottoGames);
+        Statistics statistics = statisticsService.calculateStatistics(
+            new PurchaseAmount(1000), new PurchaseGameAmount(1, 0), winningNumbers, lottoGames);
 
         assertThat(statistics.winningPrizes()).isNotNull();
         assertThat(statistics.payoutRatio()).isGreaterThanOrEqualTo(0);
@@ -47,20 +50,8 @@ public class StatisticsServiceTest {
             new LottoNumbers(List.of(10, 11, 12, 13, 14, 15))
         ));
 
-        Statistics statistics = statisticsService.calculateStatistics(winningNumbers, lottoGames);
-
-        assertThat(statistics.payoutRatio()).isEqualTo(0.0);
-    }
-
-    @Test
-    void 빈_게임_리스트의_경우_수익률은_0이다() {
-        LottoNumbers winningLottoNumbers = new LottoNumbers(List.of(1, 2, 3, 4, 5, 6));
-        LottoNumber bonusNumber = LottoNumber.from(7);
-        WinningNumbers winningNumbers = new WinningNumbers(winningLottoNumbers, bonusNumber);
-
-        LottoGames lottoGames = new LottoGames(List.of());
-
-        Statistics statistics = statisticsService.calculateStatistics(winningNumbers, lottoGames);
+        Statistics statistics = statisticsService.calculateStatistics(
+            new PurchaseAmount(1000), new PurchaseGameAmount(1, 0), winningNumbers, lottoGames);
 
         assertThat(statistics.payoutRatio()).isEqualTo(0.0);
     }
@@ -79,7 +70,8 @@ public class StatisticsServiceTest {
             new LottoNumbers(List.of(1, 2, 3, 10, 11, 12))   // 5등
         ));
 
-        Statistics statistics = statisticsService.calculateStatistics(winningNumbers, lottoGames);
+        Statistics statistics = statisticsService.calculateStatistics(
+            new PurchaseAmount(5000), new PurchaseGameAmount(5, 0), winningNumbers, lottoGames);
 
         assertThat(statistics.winningPrizes()).isNotNull();
         assertThat(statistics.winningPrizes().getCounts().get(Prize.FIRST)).isEqualTo(1);
@@ -101,7 +93,8 @@ public class StatisticsServiceTest {
             new LottoNumbers(List.of(1, 2, 3, 4, 5, 6))
         ));
 
-        Statistics statistics = statisticsService.calculateStatistics(winningNumbers, lottoGames);
+        Statistics statistics = statisticsService.calculateStatistics(
+            new PurchaseAmount(1000), new PurchaseGameAmount(1, 0), winningNumbers, lottoGames);
 
         // 수익률 = 2,000,000,000 / (1 * 1,000) = 2,000,000
         assertThat(statistics.payoutRatio()).isEqualTo(2_000_000.0);
@@ -119,7 +112,8 @@ public class StatisticsServiceTest {
             new LottoNumbers(List.of(1, 2, 3, 13, 14, 15))
         ));
 
-        Statistics statistics = statisticsService.calculateStatistics(winningNumbers, lottoGames);
+        Statistics statistics = statisticsService.calculateStatistics(
+            new PurchaseAmount(2000), new PurchaseGameAmount(2, 0), winningNumbers, lottoGames);
 
         // 수익률 = (5,000 * 2) / (2 * 1,000) = 10,000 / 2,000 = 5.0
         assertThat(statistics.payoutRatio()).isEqualTo(5.0);
@@ -139,7 +133,8 @@ public class StatisticsServiceTest {
             new LottoNumbers(List.of(1, 2, 3, 4, 10, 11))    // 4등
         ));
 
-        Statistics statistics = statisticsService.calculateStatistics(winningNumbers, lottoGames);
+        Statistics statistics = statisticsService.calculateStatistics(
+            new PurchaseAmount(5000), new PurchaseGameAmount(5, 0), winningNumbers, lottoGames);
 
         assertThat(statistics.winningPrizes().getCounts().get(Prize.FIRST)).isEqualTo(2);
         assertThat(statistics.winningPrizes().getCounts().get(Prize.SECOND)).isEqualTo(1);
