@@ -1,15 +1,17 @@
 package com.kakao.onboarding.precourse.albusduke.lotto.controller;
 
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoGames;
-import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseAmount;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseGameAmount;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.Statistics;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.WinningNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.service.LottoService;
 import com.kakao.onboarding.precourse.albusduke.lotto.service.StatisticsService;
 import com.kakao.onboarding.precourse.albusduke.lotto.view.InputView;
-import com.kakao.onboarding.precourse.albusduke.lotto.view.ManualGameCount;
+import com.kakao.onboarding.precourse.albusduke.lotto.view.LottoGamesRequest;
+import com.kakao.onboarding.precourse.albusduke.lotto.view.ManualGameCountRequest;
 import com.kakao.onboarding.precourse.albusduke.lotto.view.OutputView;
+import com.kakao.onboarding.precourse.albusduke.lotto.view.PurchaseAmountRequest;
+import com.kakao.onboarding.precourse.albusduke.lotto.view.WinningNumbersRequest;
 
 public class LottoController {
 
@@ -29,17 +31,19 @@ public class LottoController {
 
     public PurchaseGameAmount purchase() {
         return Retry.onError(() -> {
-            PurchaseAmount purchaseAmount = inputView.inputPurchaseAmount();
+            PurchaseAmountRequest purchaseAmountRequest = inputView.inputPurchaseAmount();
 
-            ManualGameCount manualGameCount = inputView.inputManualGameCount();
+            ManualGameCountRequest manualGameCountRequest = inputView.inputManualGameCount();
 
-            return lottoService.purchaseLottoGames(purchaseAmount, manualGameCount);
+            return lottoService.purchaseLottoGames(purchaseAmountRequest, manualGameCountRequest);
         }, outputView::outputError);
     }
 
     public LottoGames generate(PurchaseGameAmount purchaseGameAmount) {
         return Retry.onError(() -> {
-            LottoGames manualGames = inputView.inputManualGames(purchaseGameAmount);
+            LottoGamesRequest manualGamesRequest = inputView.inputManualGames(purchaseGameAmount);
+
+            LottoGames manualGames = lottoService.purchaseManualGames(manualGamesRequest);
 
             outputView.outputPurchaseGameAmount(purchaseGameAmount);
 
@@ -47,12 +51,15 @@ public class LottoController {
 
             outputView.outputLottoNumbers(autoGames);
 
-            return manualGames.add(autoGames);
+            return lottoService.sumGames(manualGames, autoGames);
         }, outputView::outputError);
     }
 
     public WinningNumbers createWinningNumbers() {
-        return Retry.onError(inputView::inputWinningNumbers, outputView::outputError);
+        return Retry.onError(() -> {
+            WinningNumbersRequest winningNumbersRequest = inputView.inputWinningNumbers();
+            return lottoService.createWinningNumbers(winningNumbersRequest);
+        }, outputView::outputError);
     }
 
     public void calculateStatistics(WinningNumbers winningNumbers, LottoGames lottoGames) {

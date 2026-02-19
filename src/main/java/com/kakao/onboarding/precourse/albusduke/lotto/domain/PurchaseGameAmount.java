@@ -1,7 +1,5 @@
 package com.kakao.onboarding.precourse.albusduke.lotto.domain;
 
-import com.kakao.onboarding.precourse.albusduke.lotto.view.ManualGameCount;
-
 public record PurchaseGameAmount(int autoCount, int manualCount) {
 
     private static final String PURCHASE_MOUNT_NOT_DIVIDED_BY_LOTTO_COST_FORMAT = "로또 구매 단위는 %d원 단위여야 합니다.";

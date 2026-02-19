@@ -1,11 +1,6 @@
 package com.kakao.onboarding.precourse.albusduke.lotto.view;
 
-import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoGames;
-import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumber;
-import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumbers;
-import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseAmount;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseGameAmount;
-import com.kakao.onboarding.precourse.albusduke.lotto.domain.WinningNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.util.Input;
 import com.kakao.onboarding.precourse.albusduke.lotto.util.Output;
 import java.util.ArrayList;
@@ -32,34 +27,34 @@ public class InputView {
     }
 
 
-    public PurchaseAmount inputPurchaseAmount() {
+    public PurchaseAmountRequest inputPurchaseAmount() {
         output.output(PURCHASE_AMOUNT_REQUEST);
 
         int purchaseAmount = parseInt();
 
-        return new PurchaseAmount(purchaseAmount);
+        return new PurchaseAmountRequest(purchaseAmount);
     }
 
-    public ManualGameCount inputManualGameCount() {
+    public ManualGameCountRequest inputManualGameCount() {
         output.output(MANUAL_GAME_COUNT_REQUEST);
 
         int manualGameCount = parseInt();
 
-        return new ManualGameCount(manualGameCount);
+        return new ManualGameCountRequest(manualGameCount);
     }
 
-    public LottoGames inputManualGames(PurchaseGameAmount purchaseGameAmount) {
+    public LottoGamesRequest inputManualGames(PurchaseGameAmount purchaseGameAmount) {
         output.output(MANUAL_GAME_NUMBERS_REQUEST);
 
-        List<LottoNumbers> manualGames = new ArrayList<>();
+        List<List<Integer>> manualGames = new ArrayList<>();
         for (int i = 0; i < purchaseGameAmount.manualCount(); ++i) {
-            manualGames.add(new LottoNumbers(parseIntegers()));
+            manualGames.add(parseIntegers());
         }
 
-        return new LottoGames(manualGames);
+        return new LottoGamesRequest(manualGames);
     }
 
-    public WinningNumbers inputWinningNumbers() {
+    public WinningNumbersRequest inputWinningNumbers() {
         output.output(WINNING_NUMBERS_REQUEST);
 
         List<Integer> winningNumbers = parseIntegers();
@@ -67,7 +62,7 @@ public class InputView {
         output.output(BONUS_NUMBER_REQUEST);
         int bonusNumber = parseInt();
 
-        return new WinningNumbers(new LottoNumbers(winningNumbers), LottoNumber.from(bonusNumber));
+        return new WinningNumbersRequest(winningNumbers, bonusNumber);
     }
 
     private List<Integer> parseIntegers() {
