@@ -13,6 +13,7 @@ import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumbersGenerator;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseAmount;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseGameAmount;
+import com.kakao.onboarding.precourse.albusduke.lotto.view.ManualGameCount;
 
 public class LottoServiceTest {
 

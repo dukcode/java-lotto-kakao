@@ -18,4 +18,8 @@ public class WinningPrizes {
     public Map<Prize, Integer> getCounts() {
         return counts;
     }
+
+    public int getCountOf(Prize prize) {
+        return counts.getOrDefault(prize, 0);
+    }
 }
