@@ -23,13 +23,13 @@ public class StatisticsService {
 
     private static double calculateProfitRatio(PurchaseAmount purchaseAmount,
         WinningPrizes winningPrizes) {
-        int gameCount = purchaseAmount.gameCount();
+        int amount = purchaseAmount.purchaseAmount();
 
-        if (gameCount == 0) {
+        if (amount == 0) {
             return 0;
         }
 
-        return (double) calculateTotalReward(winningPrizes) / gameCount;
+        return (double) calculateTotalReward(winningPrizes) / amount;
     }
 
     public Statistics calculateStatistics(
