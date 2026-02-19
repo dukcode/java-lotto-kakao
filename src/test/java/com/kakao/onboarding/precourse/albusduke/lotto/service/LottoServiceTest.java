@@ -8,6 +8,7 @@ import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoNumbersGenerator;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseAmount;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseGameAmount;
+import com.kakao.onboarding.precourse.albusduke.lotto.view.ManualGameCountRequest;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,41 +29,23 @@ public class LottoServiceTest {
     void 구매_금액이_1000원_단위로_나누어떨어지면_PurchaseGameAmount를_반환한다() {
         PurchaseAmount purchaseAmount = new PurchaseAmount(5000);
 
-        PurchaseGameAmount result = lottoService.purchaseLottoGames(purchaseAmount);
+        PurchaseGameAmount result = lottoService.purchaseLottoGames(new ManualGameCountRequest(0), purchaseAmount);
 
         assertThat(result.autoCount()).isEqualTo(5);
-    }
-
-    @Test
-    void 구매_금액이_1000원_단위로_나누어떨어지지_않으면_예외를_발생시킨다() {
-        PurchaseAmount purchaseAmount = new PurchaseAmount(1500);
-
-        assertThatThrownBy(() -> lottoService.purchaseLottoGames(purchaseAmount))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("로또 구매 단위는 1000원 단위여야 합니다.");
-    }
-
-    @Test
-    void 구매_금액이_0원이면_0개의_게임을_반환한다() {
-        PurchaseAmount purchaseAmount = new PurchaseAmount(0);
-
-        PurchaseGameAmount result = lottoService.purchaseLottoGames(purchaseAmount);
-
-        assertThat(result.autoCount()).isEqualTo(0);
     }
 
     @Test
     void 구매_금액이_1000원이면_1개의_게임을_반환한다() {
         PurchaseAmount purchaseAmount = new PurchaseAmount(1000);
 
-        PurchaseGameAmount result = lottoService.purchaseLottoGames(purchaseAmount);
+        PurchaseGameAmount result = lottoService.purchaseLottoGames(new ManualGameCountRequest(0), purchaseAmount);
 
         assertThat(result.autoCount()).isEqualTo(1);
     }
 
     @Test
     void purchaseLottoGame은_생성기를_지정된_횟수만큼_호출한다() {
-        PurchaseGameAmount purchaseGameAmount = new PurchaseGameAmount(3);
+        PurchaseGameAmount purchaseGameAmount = new PurchaseGameAmount(3, 0);
         fixedGenerator.setFixedLottoNumbers(new LottoNumbers(List.of(1, 2, 3, 4, 5, 6)));
 
         LottoGames result = lottoService.purchaseAutoGames(purchaseGameAmount);
@@ -73,7 +56,7 @@ public class LottoServiceTest {
 
     @Test
     void purchaseLottoGame은_생성된_로또_번호들을_LottoGames로_반환한다() {
-        PurchaseGameAmount purchaseGameAmount = new PurchaseGameAmount(2);
+        PurchaseGameAmount purchaseGameAmount = new PurchaseGameAmount(2, 0);
         LottoNumbers lottoNumbers1 = new LottoNumbers(List.of(1, 2, 3, 4, 5, 6));
         LottoNumbers lottoNumbers2 = new LottoNumbers(List.of(7, 8, 9, 10, 11, 12));
 
@@ -88,7 +71,7 @@ public class LottoServiceTest {
 
     @Test
     void purchaseLottoGame은_0개의_게임을_요청하면_빈_LottoGames를_반환한다() {
-        PurchaseGameAmount purchaseGameAmount = new PurchaseGameAmount(0);
+        PurchaseGameAmount purchaseGameAmount = new PurchaseGameAmount(0, 0);
 
         LottoGames result = lottoService.purchaseAutoGames(purchaseGameAmount);
 
@@ -98,7 +81,7 @@ public class LottoServiceTest {
 
     @Test
     void purchaseLottoGame은_여러_번_호출해도_정상적으로_동작한다() {
-        PurchaseGameAmount purchaseGameAmount = new PurchaseGameAmount(2);
+        PurchaseGameAmount purchaseGameAmount = new PurchaseGameAmount(2, 0);
         fixedGenerator.setFixedLottoNumbers(new LottoNumbers(List.of(1, 2, 3, 4, 5, 6)));
 
         LottoGames result1 = lottoService.purchaseAutoGames(purchaseGameAmount);
