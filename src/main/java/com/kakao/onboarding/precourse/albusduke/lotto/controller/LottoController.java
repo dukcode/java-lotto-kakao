@@ -13,61 +13,52 @@ import com.kakao.onboarding.precourse.albusduke.lotto.view.OutputView;
 
 public class LottoController {
 
-	private final InputView inputView;
-	private final OutputView outputView;
+    private final InputView inputView;
+    private final OutputView outputView;
 
-	private final LottoService lottoService;
-	private final StatisticsService statisticsService;
+    private final LottoService lottoService;
+    private final StatisticsService statisticsService;
 
-	public LottoController(InputView inputView, OutputView outputView,
-		LottoService lottoService, StatisticsService statisticsService) {
-		this.inputView = inputView;
-		this.outputView = outputView;
-		this.lottoService = lottoService;
-		this.statisticsService = statisticsService;
-	}
+    public LottoController(InputView inputView, OutputView outputView,
+        LottoService lottoService, StatisticsService statisticsService) {
+        this.inputView = inputView;
+        this.outputView = outputView;
+        this.lottoService = lottoService;
+        this.statisticsService = statisticsService;
+    }
 
-	public PurchaseGameAmount purchase() {
-		try {
-			PurchaseAmount purchaseAmount = inputView.inputPurchaseAmount();
-			ManualGameCount manualGameCount = inputView.inputManualGameCount();
-			PurchaseGameAmount purchaseGameAmount = lottoService.purchaseLottoGames(purchaseAmount, manualGameCount);
-			return purchaseGameAmount;
-		} catch (IllegalArgumentException e) {
-			outputView.outputError(e);
-			return purchase();
-		}
-	}
+    public PurchaseGameAmount purchase() {
+        return Retry.onError(() -> {
+            PurchaseAmount purchaseAmount = inputView.inputPurchaseAmount();
 
-	public LottoGames generate(PurchaseGameAmount purchaseGameAmount) {
-		try {
-			LottoGames manualGames = inputView.inputManualGames(new ManualGameCount(purchaseGameAmount.manualCount()));
-			outputView.outputPurchaseGameAmount(purchaseGameAmount);
-			LottoGames autoGames = lottoService.purchaseLottoGame(purchaseGameAmount);
-			outputView.outputLottoNumbers(autoGames);
-			return manualGames.add(autoGames);
-		} catch (IllegalArgumentException e) {
-			outputView.outputError(e);
-			return generate(purchaseGameAmount);
-		}
-	}
+            ManualGameCount manualGameCount = inputView.inputManualGameCount();
 
-	public WinningNumbers createWinningNumbers() {
-		try {
-			return inputView.inputWinningNumbers();
-		} catch (IllegalArgumentException e) {
-			outputView.outputError(e);
-			return createWinningNumbers();
-		}
-	}
+            return lottoService.purchaseLottoGames(purchaseAmount, manualGameCount);
+        }, outputView::outputError);
+    }
 
-	public void calculateStatistics(WinningNumbers winningNumbers, LottoGames lottoGames) {
-		try {
-			Statistics statistics = statisticsService.calculateStatistics(winningNumbers, lottoGames);
-			outputView.outputStatistics(statistics);
-		} catch (IllegalArgumentException e) {
-			outputView.outputError(e);
-			createWinningNumbers();
-		}
-	}
+    public LottoGames generate(PurchaseGameAmount purchaseGameAmount) {
+        return Retry.onError(() -> {
+            LottoGames manualGames =
+                inputView.inputManualGames(new ManualGameCount(purchaseGameAmount.manualCount()));
+
+            outputView.outputPurchaseGameAmount(purchaseGameAmount);
+
+            LottoGames autoGames = lottoService.purchaseLottoGame(purchaseGameAmount);
+
+            outputView.outputLottoNumbers(autoGames);
+
+            return manualGames.add(autoGames);
+        }, outputView::outputError);
+    }
+
+    public WinningNumbers createWinningNumbers() {
+        return Retry.onError(inputView::inputWinningNumbers, outputView::outputError);
+    }
+
+    public void calculateStatistics(WinningNumbers winningNumbers, LottoGames lottoGames) {
+        Statistics statistics = statisticsService.calculateStatistics(winningNumbers,
+            lottoGames);
+        outputView.outputStatistics(statistics);
+    }
 }
