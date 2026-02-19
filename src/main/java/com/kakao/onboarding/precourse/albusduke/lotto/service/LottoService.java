@@ -16,19 +16,20 @@ import java.util.List;
 
 public class LottoService {
 
-    private static final int LOTTO_COST = 1_000;
-
     private final LottoNumbersGenerator lottoNumbersGenerator;
 
     public LottoService(LottoNumbersGenerator lottoNumbersGenerator) {
         this.lottoNumbersGenerator = lottoNumbersGenerator;
     }
 
-    public PurchaseGameAmount purchaseLottoGames(PurchaseAmountRequest purchaseAmountRequest,
-        ManualGameCountRequest manualGameCountRequest) {
-        PurchaseAmount purchaseAmount = purchaseAmountRequest.toPurchaseAmount();
+    public PurchaseAmount prepareAmount(PurchaseAmountRequest purchaseAmountRequest) {
+        return purchaseAmountRequest.toPurchaseAmount();
+    }
+
+    public PurchaseGameAmount purchaseLottoGames(ManualGameCountRequest manualGameCountRequest,
+        PurchaseAmount purchaseAmount) {
         ManualGameCount manualGameCount = manualGameCountRequest.toManualGameCount();
-        return PurchaseGameAmount.of(purchaseAmount, LOTTO_COST, manualGameCount);
+        return PurchaseGameAmount.of(purchaseAmount, manualGameCount);
     }
 
     public LottoGames purchaseAutoGames(PurchaseGameAmount purchaseGameAmount) {
@@ -51,7 +52,4 @@ public class LottoService {
         return winningNumbersRequest.toWinningNumbers();
     }
 
-    public PurchaseAmount validatePurchaseAmount(PurchaseAmountRequest purchaseAmountRequest) {
-        return purchaseAmountRequest.toPurchaseAmount();
-    }
 }

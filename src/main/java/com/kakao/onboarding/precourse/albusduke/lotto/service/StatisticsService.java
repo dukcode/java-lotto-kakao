@@ -1,22 +1,15 @@
 package com.kakao.onboarding.precourse.albusduke.lotto.service;
 
+import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoGames;
+import com.kakao.onboarding.precourse.albusduke.lotto.domain.Prize;
+import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseAmount;
+import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseGameAmount;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.Statistics;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.WinningNumbers;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.WinningPrizes;
-import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoGames;
-import com.kakao.onboarding.precourse.albusduke.lotto.domain.Prize;
-
 import java.util.Map;
 
 public class StatisticsService {
-    public Statistics calculateStatistics(WinningNumbers winningNumbers, LottoGames lottoGames) {
-        WinningPrizes winningPrizes = new WinningPrizes(winningNumbers, lottoGames);
-
-        int gameCount = calculateGameCount(winningPrizes);
-        long totalReward = calculateTotalReward(winningPrizes);
-
-        return new Statistics(winningPrizes, calculateProfitRatio(gameCount, totalReward));
-    }
 
     private static long calculateTotalReward(WinningPrizes winningPrizes) {
         Map<Prize, Integer> counts = winningPrizes.getCounts();
@@ -28,17 +21,22 @@ public class StatisticsService {
         return totalReward;
     }
 
-    private static int calculateGameCount(WinningPrizes winningPrizes) {
-        Map<Prize, Integer> counts = winningPrizes.getCounts();
+    private static double calculateProfitRatio(PurchaseAmount purchaseAmount,
+        WinningPrizes winningPrizes) {
+        int gameCount = purchaseAmount.gameCount();
 
-        int gameCount = 0;
-        for (Prize prize : Prize.values()) {
-            gameCount += counts.getOrDefault(prize, 0);
+        if (gameCount == 0) {
+            return 0;
         }
-        return gameCount;
+
+        return (double) calculateTotalReward(winningPrizes) / gameCount;
     }
 
-    private static double calculateProfitRatio(int gameCount, long totalReward) {
-        return gameCount == 0 ? 0 : totalReward / ((double) gameCount * 1000);
+    public Statistics calculateStatistics(
+        PurchaseAmount purchaseAmount, PurchaseGameAmount purchaseGameAmount,
+        WinningNumbers winningNumbers, LottoGames lottoGames) {
+        WinningPrizes winningPrizes = new WinningPrizes(winningNumbers, lottoGames);
+
+        return new Statistics(winningPrizes, calculateProfitRatio(purchaseAmount, winningPrizes));
     }
 }

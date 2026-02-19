@@ -24,6 +24,8 @@ public class OutputView {
     private static final String COUNT_FORMAT = "%d개";
     private static final String RATIO_FORMAT = "총 수익률은 %.2f입니다.(기준이 1이기 때문에 결과적으로 손해라는 의미임)";
 
+    private static final String ERROR_FORMAT = "[ERROR] %s";
+
     private final Output output;
 
     public OutputView(Output output) {
@@ -44,7 +46,7 @@ public class OutputView {
             for (LottoNumber number : sortedLottoNumbers) {
                 sj.add(String.valueOf(number.getNumber()));
             }
-            System.out.println(sj);
+            output.output(sj.toString());
         }
     }
 
@@ -79,6 +81,6 @@ public class OutputView {
     }
 
     public void outputError(IllegalArgumentException e) {
-        System.out.println("[ERROR] " + e.getMessage());
+        output.output(String.format(ERROR_FORMAT, e.getMessage()));
     }
 }

@@ -1,6 +1,7 @@
 package com.kakao.onboarding.precourse.albusduke.lotto.controller;
 
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.LottoGames;
+import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseAmount;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.PurchaseGameAmount;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.Statistics;
 import com.kakao.onboarding.precourse.albusduke.lotto.domain.WinningNumbers;
@@ -29,13 +30,17 @@ public class LottoController {
         this.statisticsService = statisticsService;
     }
 
-    public PurchaseGameAmount purchase() {
+    public PurchaseAmount prepareAmount() {
         return Retry.onError(() -> {
             PurchaseAmountRequest purchaseAmountRequest = inputView.inputPurchaseAmount();
-            lottoService.validatePurchaseAmount(purchaseAmountRequest);
+            return lottoService.prepareAmount(purchaseAmountRequest);
+        }, outputView::outputError);
+    }
 
+    public PurchaseGameAmount purchase(PurchaseAmount purchaseAmount) {
+        return Retry.onError(() -> {
             ManualGameCountRequest manualGameCountRequest = inputView.inputManualGameCount();
-            return lottoService.purchaseLottoGames(purchaseAmountRequest, manualGameCountRequest);
+            return lottoService.purchaseLottoGames(manualGameCountRequest, purchaseAmount);
         }, outputView::outputError);
     }
 
@@ -59,8 +64,12 @@ public class LottoController {
         }, outputView::outputError);
     }
 
-    public void calculateStatistics(WinningNumbers winningNumbers, LottoGames lottoGames) {
-        Statistics statistics = statisticsService.calculateStatistics(winningNumbers,
+    public void calculateStatistics(
+        PurchaseAmount purchaseAmount,
+        PurchaseGameAmount purchaseGameAmount,
+        WinningNumbers winningNumbers, LottoGames lottoGames) {
+        Statistics statistics = statisticsService.calculateStatistics(purchaseAmount,
+            purchaseGameAmount, winningNumbers,
             lottoGames);
         outputView.outputStatistics(statistics);
     }
